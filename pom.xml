@@ -13,5 +13,17 @@
     <module>triple-sample</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>cglib</groupId>
+        <artifactId>cglib</artifactId>
+        <version>3.2.9</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+
 
 </project>
