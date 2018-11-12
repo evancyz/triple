@@ -12,8 +12,11 @@ public class JdkProxyFactory<T> implements ProxyFactory<T> {
             return (T) Proxy.newProxyInstance(
                 clazz.getClassLoader(),
                 new Class[] {clazz},
-                new MyInvocationHandler(clazz.newInstance()));
+                (proxy, method, args) -> {
+                    return null;
+                });
         }catch (Exception e){
+
             throw new RuntimeException("生成Java代理类失败 ", e);
         }
     }

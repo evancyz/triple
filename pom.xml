@@ -13,6 +13,12 @@
     <module>triple-sample</module>
   </modules>
 
+  <properties>
+    <jdk.version>1.8</jdk.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <webappDiretory>target</webappDiretory>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -20,6 +26,13 @@
         <artifactId>cglib</artifactId>
         <version>3.2.9</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.45</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -29,8 +42,29 @@
       <artifactId>guava</artifactId>
       <version>23.0</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.10</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 
 

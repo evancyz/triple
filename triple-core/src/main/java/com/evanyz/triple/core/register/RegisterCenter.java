@@ -11,3 +11,4 @@ public interface RegisterCenter {
 
     List<String> getProvider();
 }
+
