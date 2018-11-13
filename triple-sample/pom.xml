@@ -11,5 +11,13 @@
 
   <artifactId>triple-sample</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>triple-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
 
 </project>

@@ -7,10 +7,9 @@ import net.sf.cglib.proxy.MethodInterceptor;
 /**
  * Created by evan on 2018/11/11.
  */
-public class CglibProxyFactory<T> implements ProxyFactory<T> {
+public class CglibProxyFactory implements ProxyFactory {
 
-    @Override public T getProxy(Class<T> clazz) {
-
+    @Override public <T> T getProxy(Class<T> clazz) {
         try {
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(clazz);

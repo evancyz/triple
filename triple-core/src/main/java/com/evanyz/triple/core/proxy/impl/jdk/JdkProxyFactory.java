@@ -6,8 +6,8 @@ import java.lang.reflect.Proxy;
 /**
  * Created by evan on 2018/11/11.
  */
-public class JdkProxyFactory<T> implements ProxyFactory<T> {
-    @Override public T getProxy(Class<T> clazz) {
+public class JdkProxyFactory implements ProxyFactory {
+    @Override public <T> T getProxy(Class<T> clazz) {
         try {
             return (T) Proxy.newProxyInstance(
                 clazz.getClassLoader(),

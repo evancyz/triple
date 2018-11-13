@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class TripleRequest {
-    public Class clazz;
+    public String serviceName;
     public String methodName;
     public Object[] params;
 }
