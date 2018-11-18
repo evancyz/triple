@@ -4,12 +4,12 @@ import com.evanyz.triple.core.net.Server;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
 import com.evanyz.triple.core.provider.ProviderFactory;
-import com.evanyz.triple.core.register.RegisterCenterManager;
 import com.evanyz.triple.core.serialization.Serializer;
 import com.evanyz.triple.core.serialization.SerializerManager;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -21,32 +21,36 @@ public class SocketServer implements Server {
     @Override public void start() {
 
         try {
-            ServerSocket serverSocket = new ServerSocket(9999);
+
+            ServerSocket serverSocket = new ServerSocket();
+            serverSocket.bind(new InetSocketAddress("127.0.0.1", 9999));
             //register
-            RegisterCenterManager.getCenter().register(genServerAddress(serverSocket));
+            //RegisterCenterManager.getCenter().register(genServerAddress(serverSocket));
             //open socket
-            Socket socket = serverSocket.accept();
+            while (true) {
+                Socket socket = serverSocket.accept();
 
-            try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());) {
-                //receive data
-                byte[] data= new byte[inputStream.available()];
-                inputStream.read(data);
+                try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
+                    //receive data
+                    byte[] data = new byte[1024];
+                    while (inputStream.read(data) != -1) {}
+                    //get serializer
+                    Serializer serializer = SerializerManager.getSerializer();
 
-                //get serializer
-                Serializer serializer = SerializerManager.getSerializer();
+                    //deserialize
+                    TripleRequest request = SerializerManager.getSerializer().deserialize(data, TripleRequest.class);
 
-                //deserialize
-                TripleRequest request = (TripleRequest)SerializerManager.getSerializer().deserialize(data, TripleRequest.class);
+                    //invoke
+                    TripleResponse response = ProviderFactory.newInstance().invoke(request);
 
-                //invoke
-                TripleResponse response = ProviderFactory.newInstance().invoke(request);
+                    //serialize
+                    byte[] responseBytes = serializer.serialize(response);
 
-                //serialize
-                byte[] responseBytes = serializer.serialize(response);
-
-                try (OutputStream outputStream = socket.getOutputStream()){
-                    outputStream.write(responseBytes);
-                    outputStream.flush();
+                    try (OutputStream outputStream = socket.getOutputStream()) {
+                        outputStream.write(responseBytes);
+                        outputStream.flush();
+                        socket.shutdownOutput();
+                    }
                 }
             }
         } catch (IOException e) {

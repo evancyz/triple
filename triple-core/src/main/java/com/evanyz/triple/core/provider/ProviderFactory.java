@@ -18,6 +18,8 @@ public class ProviderFactory {
     }
 
     public TripleResponse invoke(TripleRequest tripleRequest) {
-        return null;
+        TripleResponse response = new TripleResponse();
+        response.setData("hello");
+        return response;
     }
 }

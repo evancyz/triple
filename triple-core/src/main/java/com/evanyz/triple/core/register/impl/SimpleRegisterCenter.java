@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class SimpleRegisterCenter implements RegisterCenter {
 
-    List<String> providers = Lists.newArrayList();
+    List<String> providers = Lists.newArrayList("127.0.0.1:9999");
 
     @Override public void register(String provider) {
         providers.add(provider);

@@ -1,6 +1,8 @@
 package com.evanyz.triple.core.proxy.impl.cblib;
 
+import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.proxy.ProxyFactory;
+import com.evanyz.triple.core.proxy.impl.ProxyHandler;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
@@ -15,7 +17,11 @@ public class CglibProxyFactory implements ProxyFactory {
             enhancer.setSuperclass(clazz);
             enhancer.setClassLoader(clazz.newInstance().getClass().getClassLoader());
             enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
-                return null;
+                TripleRequest request = new TripleRequest();
+                request.setServiceName(clazz.getName());
+                request.setMethodName(method.getName());
+                request.setParams(objects);
+                return ProxyHandler.handler(request).getData();
             });
             return (T)enhancer.create();
         } catch (Exception e) {

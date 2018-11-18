@@ -12,7 +12,7 @@ public class FastJSONSerializer implements Serializer{
         return JSON.toJSONBytes(object);
     }
 
-    @Override public Object deserialize(byte[] data, Class clazz) {
+    @Override public <T> T deserialize(byte[] data, Class<T> clazz) {
         return JSON.parseObject(data, clazz);
     }
 }

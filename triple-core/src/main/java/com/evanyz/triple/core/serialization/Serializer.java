@@ -8,5 +8,5 @@ public interface Serializer {
     //序列化,反序列化
     byte[] serialize(Object object);
 
-    Object deserialize(byte[] data, Class clazz);
+    <T> T deserialize(byte[] data, Class<T> clazz);
 }

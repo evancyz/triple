@@ -30,14 +30,14 @@ public class SocketClient implements Client {
             try (OutputStream outputStream = socket.getOutputStream()) {
                 outputStream.write(data);
                 outputStream.flush();
+                socket.shutdownOutput();
 
                 //receive data
                 try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
-                    int size = inputStream.available();
-                    byte[] response = new byte[size];
-                    inputStream.read(response);
+                    byte[] response = new byte[1024];
+                    while (inputStream.read(response) != -1) {}
                     //deserialize
-                    return (TripleResponse) serializer.deserialize(data, request.getClass());
+                    return  serializer.deserialize(response, TripleResponse.class);
                 }
             }
         } catch (Exception e) {

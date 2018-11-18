@@ -1,6 +1,8 @@
 package com.evanyz.triple.core.proxy.impl.jdk;
 
+import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.proxy.ProxyFactory;
+import com.evanyz.triple.core.proxy.impl.ProxyHandler;
 import java.lang.reflect.Proxy;
 
 /**
@@ -13,7 +15,11 @@ public class JdkProxyFactory implements ProxyFactory {
                 clazz.getClassLoader(),
                 new Class[] {clazz},
                 (proxy, method, args) -> {
-                    return null;
+                    TripleRequest request = new TripleRequest();
+                    request.setServiceName(clazz.getName());
+                    request.setMethodName(method.getName());
+                    request.setParams(args);
+                    return ProxyHandler.handler(request).getData();
                 });
         }catch (Exception e){
 
