@@ -11,8 +11,8 @@
 ![avatar](http://pi4y182v0.bkt.clouddn.com/Triple-Structure.jpg)
 
 + <code>Serilizer</code> 序列化器，负责网络层传输的数据的序列化/反序列化
-+ <code>Net</code> 网络层，负责将定义网络传输领对象和定义传输协议（socket、netty。。）
-+ <code>RegisterCenter</code>注册中心，暂时负责服务的注册于发现
-+ <code>Proxy</code>提供一套代理方案给客户端使用，主要功能是服务发现，收发网络请求
-+ <code>Server</code>服务提供者，主要功能室，服务注册，监听服务，调用本地方法，返回调用结果
++ <code>Net</code> 网络层，负责将定义网络传输领对象和定义传输协议（socket、netty等）
++ <code>RegisterCenter</code> 注册中心，负责服务的注册与发现
++ <code>Proxy</code> 提供一套代理方案给客户端使用，主要功能是服务发现，收发网络请求
++ <code>Server</code> 服务提供者，主要功能是，服务注册，监听服务，调用本地方法，返回调用结果
 
