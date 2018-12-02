@@ -9,6 +9,6 @@ import com.evanyz.triple.core.provider.annotation.TripleRpcService;
 public class HelloServiceImpl {
 
     public String hello() {
-        return "hello world!";
+        return "Mamama";
     }
 }

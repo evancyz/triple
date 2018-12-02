@@ -30,8 +30,12 @@ public class SocketServer implements Server {
 
             ServerSocket serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress("127.0.0.1", 9999));
-            //register
+            //register server
             RegisterCenterManager.getCenter().register(genServerAddress(serverSocket));
+
+            //register service
+            ProviderFactory.register();
+
             //open socket
             while (true) {
 
@@ -50,7 +54,7 @@ public class SocketServer implements Server {
                         TripleRequest request = SerializerManager.getSerializer().deserialize(data, TripleRequest.class);
 
                         //invoke
-                        TripleResponse response = ProviderFactory.newInstance().invoke(request);
+                        TripleResponse response = ProviderFactory.getInstance().invoke(request);
 
                         //serialize
                         byte[] responseBytes = ByteArrayReader.wrapData(serializer.serialize(response));

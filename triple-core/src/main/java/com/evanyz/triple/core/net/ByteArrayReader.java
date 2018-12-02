@@ -15,7 +15,8 @@ public class ByteArrayReader {
             inputStream.read(size);
             int dataSize = ByteUtils.byte2int(size);
             byte[] dataBytes = new byte[dataSize];
-            while (inputStream.read(dataBytes) != -1) {}
+            while (inputStream.read(dataBytes) != -1) {
+            }
             return dataBytes;
         } catch (IOException e) {
             throw new RuntimeException("read error", e);
@@ -27,7 +28,7 @@ public class ByteArrayReader {
         byte[] newDate = new byte[data.length + size.length];
         System.arraycopy(size, 0, newDate, 0, 3);
         System.arraycopy(data, 0, newDate, 3, data.length);
-        return data;
+        return newDate;
     }
 
 }
