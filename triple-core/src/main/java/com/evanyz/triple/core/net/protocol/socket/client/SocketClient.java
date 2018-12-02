@@ -1,5 +1,6 @@
 package com.evanyz.triple.core.net.protocol.socket.client;
 
+import com.evanyz.triple.core.net.ByteArrayReader;
 import com.evanyz.triple.core.net.Client;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
@@ -24,7 +25,7 @@ public class SocketClient implements Client {
             Serializer serializer = SerializerManager.getSerializer();
 
             //serialize
-            byte[] data = serializer.serialize(request);
+            byte[] data = ByteArrayReader.wrapData(serializer.serialize(request));
 
             //send data
             try (OutputStream outputStream = socket.getOutputStream()) {
@@ -34,8 +35,7 @@ public class SocketClient implements Client {
 
                 //receive data
                 try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
-                    byte[] response = new byte[1024];
-                    while (inputStream.read(response) != -1) {}
+                    byte[] response = ByteArrayReader.read(inputStream);
                     //deserialize
                     return  serializer.deserialize(response, TripleResponse.class);
                 }

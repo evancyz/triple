@@ -1,5 +1,6 @@
 package com.evanyz.triple.core.net.protocol.socket.server;
 
+import com.evanyz.triple.core.net.ByteArrayReader;
 import com.evanyz.triple.core.net.Server;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
@@ -37,12 +38,11 @@ public class SocketServer implements Server {
                 Socket socket = serverSocket.accept();
 
                 executorService.execute(()->{
-                    try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
 
+                    try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
                         //receive data
-                        byte[] data = new byte[1024];
-                        while (inputStream.read(data) != -1) {
-                        }
+                        byte[] data = ByteArrayReader.read(inputStream);
+
                         //get serializer
                         Serializer serializer = SerializerManager.getSerializer();
 
@@ -53,7 +53,7 @@ public class SocketServer implements Server {
                         TripleResponse response = ProviderFactory.newInstance().invoke(request);
 
                         //serialize
-                        byte[] responseBytes = serializer.serialize(response);
+                        byte[] responseBytes = ByteArrayReader.wrapData(serializer.serialize(response));
 
                         try (OutputStream outputStream = socket.getOutputStream()) {
                             outputStream.write(responseBytes);
@@ -73,5 +73,4 @@ public class SocketServer implements Server {
     private String genServerAddress(ServerSocket serverSocket) {
         return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
     }
-
 }
