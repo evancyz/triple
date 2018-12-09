@@ -1,6 +1,5 @@
 package com.evanyz.triple.core.provider;
 
-import com.evanyz.triple.core.config.ConfigManager;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
 import com.evanyz.triple.core.provider.annotation.TripleRpcService;
@@ -16,13 +15,13 @@ import java.util.Set;
 /**
  * Created by evan on 2018/11/13.
  */
-public class ProviderFactory {
+public class ProviderServiceFactory {
 
     private static Map<String, Object> serviceFactory = Maps.newHashMap();
 
-    private static ProviderFactory factory = new ProviderFactory();
+    private static ProviderServiceFactory factory = new ProviderServiceFactory();
 
-    public static ProviderFactory getInstance() {
+    public static ProviderServiceFactory getInstance() {
         return factory;
     }
 
@@ -30,12 +29,10 @@ public class ProviderFactory {
         return serviceFactory.get(serviceName);
     }
 
-
-
     //registerService
-    public static void register() {
+    public void registerService(String basePackageName) {
 
-        Set<Class<?>> classSets = ClassUtils.getClassSet(ConfigManager.getProviderBasePackageName());
+        Set<Class<?>> classSets = ClassUtils.getClassSet(basePackageName);
 
         classSets.forEach(clazz -> {
 
@@ -44,7 +41,6 @@ public class ProviderFactory {
             }
         });
     }
-
 
     public TripleResponse invoke(TripleRequest tripleRequest) {
 

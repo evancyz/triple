@@ -30,5 +30,4 @@ public class ByteArrayReader {
         System.arraycopy(data, 0, newDate, 3, data.length);
         return newDate;
     }
-
 }
