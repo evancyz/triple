@@ -1,11 +1,12 @@
 package com.evanyz.triple.core.net;
 
 import com.evanyz.triple.core.net.handler.ListHandler;
+import com.evanyz.triple.core.provider.ProviderMasterAware;
 
 /**
  * Created by evan on 2018/12/9.
  */
-public abstract class AbstractServer implements Server{
+public abstract class AbstractServer implements Server,ProviderMasterAware {
 
     ListHandler startHandler;
 

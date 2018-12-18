@@ -7,7 +7,7 @@ import com.evanyz.triple.core.provider.ProviderMaster;
  */
 public interface Server {
 
-    void start(ProviderMaster providerMaster);
+    void start();
 
     void close();
 

@@ -45,10 +45,11 @@ public class ProviderMaster implements Closeable {
         //init providerFactory
         providerServiceFactory = ProviderServiceFactory.getInstance();
         providerServiceFactory.setMaster(this);
-        //registe service
+        //register service
         providerServiceFactory.registerService();
         //init server
         server = new SocketServer();
+        server.setProviderMaster(this);
 
         //register server handler
         server.setStartHandler(ListHandler.newHandler().register(new AbstractHandler() {
@@ -61,7 +62,7 @@ public class ProviderMaster implements Closeable {
         }));
 
         //server start
-        server.start(this);
+        server.start();
     }
 
     @Override public void close() {

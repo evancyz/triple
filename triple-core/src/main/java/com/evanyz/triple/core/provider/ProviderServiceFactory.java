@@ -16,7 +16,8 @@ import java.util.Set;
 /**
  * Created by evan on 2018/11/13.
  */
-public class ProviderServiceFactory implements Closeable {
+public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
+
 
     private static Map<String, Object> serviceFactory = Maps.newHashMap();
 
@@ -30,7 +31,6 @@ public class ProviderServiceFactory implements Closeable {
 
     public void setMaster(ProviderMaster master) {
         this.master = master;
-
     }
 
     public static Object getService(String serviceName) {
@@ -61,7 +61,6 @@ public class ProviderServiceFactory implements Closeable {
         );
     }
 
-
     public TripleResponse invoke(TripleRequest tripleRequest) {
 
         Object service = getService(tripleRequest.getServiceName());
@@ -69,7 +68,7 @@ public class ProviderServiceFactory implements Closeable {
         for (Method method : service.getClass().getMethods()) {
 
             boolean satisfiedMethod = method.getName().equals(tripleRequest.getMethodName());
-            boolean satisfiedParams = method.getParameters().length == Optional.ofNullable(tripleRequest.getParams()).map(e->e.length).orElse(0);
+            boolean satisfiedParams = method.getParameters().length == Optional.ofNullable(tripleRequest.getParams()).map(e -> e.length).orElse(0);
 
             if (satisfiedMethod && satisfiedParams) {
                 Object o = ReflectionUtils.invokeMethod(service, method, tripleRequest.getParams());
@@ -77,5 +76,9 @@ public class ProviderServiceFactory implements Closeable {
             }
         }
         return TripleResponse.fail("失败");
+    }
+
+    @Override public void setProviderMaster(ProviderMaster master) {
+        this.master = master;
     }
 }
