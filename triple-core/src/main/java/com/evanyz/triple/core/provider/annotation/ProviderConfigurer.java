@@ -9,10 +9,10 @@ import lombok.Getter;
  * Created by evan on 2018/12/9.
  */
 @Getter
-public class ProviderConfig {
+public class ProviderConfigurer {
 
-    public static ProviderConfig init() {
-        return new ProviderConfig();
+    public static ProviderConfigurer init() {
+        return new ProviderConfigurer();
     }
 
     NetType netType = NetType.SOCKET_SHORT_CONNECTION;
@@ -25,7 +25,7 @@ public class ProviderConfig {
 
     int port = 9999;
 
-    public ProviderMaster funCenter() {
+    public ProviderMaster buildMaster() {
         return new ProviderMaster(this);
     }
 }

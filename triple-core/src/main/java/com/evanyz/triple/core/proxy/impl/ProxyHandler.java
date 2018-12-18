@@ -4,7 +4,6 @@ import com.evanyz.triple.core.net.Client;
 import com.evanyz.triple.core.net.ClientManager;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
-import com.evanyz.triple.core.register.RegisterCenterManager;
 import java.util.List;
 
 /**
@@ -13,7 +12,8 @@ import java.util.List;
 public class ProxyHandler {
 
     public static TripleResponse handler(TripleRequest tripleRequest) {
-        List<String> provider = RegisterCenterManager.getCenter().getProvider();
+        //TODO
+        List<String> provider = null;
         Client client = ClientManager.getInstance();
         return client.send(provider.iterator().next(), tripleRequest);
     }

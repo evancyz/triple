@@ -7,6 +7,7 @@ import com.evanyz.triple.core.utils.ClassUtils;
 import com.evanyz.triple.core.utils.ReflectionUtils;
 import com.evanyz.triple.core.utils.ServiceUtils;
 import com.google.common.collect.Maps;
+import java.io.Closeable;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
@@ -15,14 +16,21 @@ import java.util.Set;
 /**
  * Created by evan on 2018/11/13.
  */
-public class ProviderServiceFactory {
+public class ProviderServiceFactory implements Closeable {
 
     private static Map<String, Object> serviceFactory = Maps.newHashMap();
 
     private static ProviderServiceFactory factory = new ProviderServiceFactory();
 
+    private ProviderMaster master;
+
     public static ProviderServiceFactory getInstance() {
         return factory;
+    }
+
+    public void setMaster(ProviderMaster master) {
+        this.master = master;
+
     }
 
     public static Object getService(String serviceName) {
@@ -30,17 +38,29 @@ public class ProviderServiceFactory {
     }
 
     //registerService
-    public void registerService(String basePackageName) {
+    public void registerService() {
 
-        Set<Class<?>> classSets = ClassUtils.getClassSet(basePackageName);
+        Set<Class<?>> classSets = ClassUtils.getClassSet(master.getBasePackage());
 
         classSets.forEach(clazz -> {
 
             if (clazz.isAnnotationPresent(TripleRpcService.class)) {
+                //注册中心注册服务
+                master.getRegisterService().register(master.getIpAndPort(), clazz.getName());
+                //Factory注册服务实例
                 serviceFactory.put(ServiceUtils.genServiceName(clazz.getName()), ReflectionUtils.newInstance(clazz));
             }
         });
     }
+
+    @Override
+    public void close() {
+        //removeService
+        serviceFactory.keySet().forEach(serviceName ->
+            master.getRegisterService().unRegister(master.getIpAndPort(), serviceName)
+        );
+    }
+
 
     public TripleResponse invoke(TripleRequest tripleRequest) {
 

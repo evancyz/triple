@@ -9,4 +9,6 @@ public interface Server {
 
     void start(ProviderMaster providerMaster);
 
+    void close();
+
 }

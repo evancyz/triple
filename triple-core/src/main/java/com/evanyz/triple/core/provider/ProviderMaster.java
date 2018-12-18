@@ -1,52 +1,72 @@
 package com.evanyz.triple.core.provider;
 
+import com.evanyz.triple.core.domain.IpAndPort;
 import com.evanyz.triple.core.net.AbstractServer;
 import com.evanyz.triple.core.net.handler.AbstractHandler;
 import com.evanyz.triple.core.net.handler.ListHandler;
 import com.evanyz.triple.core.net.protocol.socket.server.SocketServer;
-import com.evanyz.triple.core.provider.annotation.ProviderConfig;
-import com.evanyz.triple.core.register.RegisterCenterManager;
+import com.evanyz.triple.core.provider.annotation.ProviderConfigurer;
+import com.evanyz.triple.core.register.RegisterService;
+import com.evanyz.triple.core.register.impl.zookeeper.ZookeeperRegisterCenter;
 import com.evanyz.triple.core.serialization.Serializer;
 import com.evanyz.triple.core.serialization.impl.FastJSONSerializer;
-import com.evanyz.triple.core.utils.IpUtils;
+import com.sun.xml.internal.ws.Closeable;
 
 /**
  * Created by evan on 2018/12/9.
  */
-public class ProviderMaster {
+public class ProviderMaster implements Closeable {
 
     private ProviderMaster() {
     }
 
-    public ProviderMaster(ProviderConfig config) {
-        this.providerConfig = config;
+    public ProviderMaster(ProviderConfigurer config) {
+        this.configurer = config;
     }
 
-    private ProviderConfig providerConfig;
+    private ProviderConfigurer configurer;
 
     private AbstractServer server;
 
     private Serializer serializer;
 
+    private ProviderServiceFactory providerServiceFactory;
+
+    private RegisterService registerService;
+
+
     public void haveFun() {
 
         //TODO use config
+        //init serializer
         serializer = new FastJSONSerializer();
-
-        //register server
-        ProviderServiceFactory.getInstance().registerService(providerConfig.getProviderBasePackageName());
-
-        //开启Server
+        //init registerService
+        registerService = new ZookeeperRegisterCenter().createService();
+        //init providerFactory
+        providerServiceFactory = ProviderServiceFactory.getInstance();
+        providerServiceFactory.setMaster(this);
+        //registe service
+        providerServiceFactory.registerService();
+        //init server
         server = new SocketServer();
 
-        //往注册中心打服务
+        //register server handler
         server.setStartHandler(ListHandler.newHandler().register(new AbstractHandler() {
             @Override public void process() {
-                RegisterCenterManager.getCenter().register(IpUtils.genIpAddress(getIp(), getPort()));
+            }
+        }));
+        server.setCloseHandler(ListHandler.newHandler().register(new AbstractHandler() {
+            @Override public void process() {
             }
         }));
 
+        //server start
         server.start(this);
+    }
+
+    @Override public void close() {
+        providerServiceFactory.close();
+        server.close();
     }
 
     public Serializer getSerializer() {
@@ -54,11 +74,25 @@ public class ProviderMaster {
     }
 
     public String getIp() {
-        return this.providerConfig.getIp();
+        return this.configurer.getIp();
     }
 
     public int getPort() {
-        return this.providerConfig.getPort();
+        return this.configurer.getPort();
     }
+
+    public RegisterService getRegisterService() {
+        return registerService;
+    }
+
+    public String getBasePackage() {
+        return this.configurer.getProviderBasePackageName();
+    }
+
+    public IpAndPort getIpAndPort() {
+        return new IpAndPort(getIp(), getPort());
+    }
+
+
 
 }

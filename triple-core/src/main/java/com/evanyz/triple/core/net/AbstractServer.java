@@ -9,21 +9,21 @@ public abstract class AbstractServer implements Server{
 
     ListHandler startHandler;
 
-    ListHandler endHandler;
+    ListHandler closeHandler;
 
     public void setStartHandler(ListHandler startHandler) {
         this.startHandler = startHandler;
     }
 
-    public void setEndHandler(ListHandler endHandler) {
-        this.endHandler = endHandler;
+    public void setCloseHandler(ListHandler closeHandler) {
+        this.closeHandler = closeHandler;
     }
 
     public ListHandler getStartHandler() {
         return startHandler;
     }
 
-    public ListHandler getEndHandler() {
-        return endHandler;
+    public ListHandler getCloseHandler() {
+        return closeHandler;
     }
 }

@@ -24,15 +24,21 @@ public class SocketServer extends AbstractServer {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(5);
 
+    public boolean flag = true;
+
+    private ServerSocket serverSocket;
+
     @Override public void start(ProviderMaster master) {
 
         try {
-
-            ServerSocket serverSocket = new ServerSocket();
+            serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress(master.getIp(), master.getPort()));
 
+            //开始扩展点
+            getStartHandler().process();
+
             //open socket
-            while (true) {
+            while (flag) {
 
                 Socket socket = serverSocket.accept();
 
@@ -69,7 +75,14 @@ public class SocketServer extends AbstractServer {
         }
     }
 
-    private String genServerAddress(ServerSocket serverSocket) {
-        return serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
+    @Override public void close() {
+        try {
+            //结束扩展点
+            getCloseHandler().process();
+            flag = false;
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
