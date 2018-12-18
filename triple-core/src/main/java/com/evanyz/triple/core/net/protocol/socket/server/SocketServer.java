@@ -5,7 +5,6 @@ import com.evanyz.triple.core.net.ByteArrayReader;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
 import com.evanyz.triple.core.provider.ProviderMaster;
-import com.evanyz.triple.core.provider.ProviderMasterAware;
 import com.evanyz.triple.core.provider.ProviderServiceFactory;
 import com.evanyz.triple.core.serialization.Serializer;
 import com.evanyz.triple.core.serialization.SerializerManager;
@@ -31,7 +30,7 @@ public class SocketServer extends AbstractServer {
 
     private ProviderMaster master;
 
-    @Override public void start(ProviderMaster master) {
+    @Override public void start() {
 
         try {
             serverSocket = new ServerSocket();
@@ -89,8 +88,7 @@ public class SocketServer extends AbstractServer {
         }
     }
 
-    @Override public void setProviderMasterAware(ProviderMaster master) {
+    @Override public void setProviderMaster(ProviderMaster master) {
         this.master = master;
-
     }
 }
