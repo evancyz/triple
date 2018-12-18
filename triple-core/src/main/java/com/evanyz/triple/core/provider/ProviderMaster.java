@@ -44,7 +44,7 @@ public class ProviderMaster implements Closeable {
         registerService = new ZookeeperRegisterCenter().createService();
         //init providerFactory
         providerServiceFactory = ProviderServiceFactory.getInstance();
-        providerServiceFactory.setMaster(this);
+        providerServiceFactory.setProviderMaster(this);
         //register service
         providerServiceFactory.registerService();
         //init server

@@ -29,10 +29,6 @@ public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
         return factory;
     }
 
-    public void setMaster(ProviderMaster master) {
-        this.master = master;
-    }
-
     public static Object getService(String serviceName) {
         return serviceFactory.get(serviceName);
     }
