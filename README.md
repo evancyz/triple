@@ -8,7 +8,7 @@
 + 最后完成一个mvp版本能run起来
 + 架构图如下，下面会由下到上介绍模块功能
 
-![avatar](http://pi4y182v0.bkt.clouddn.com/Triple-Structure.jpg)
+![avatar](https://github.com/evancyz/MarkDownPhotos/blob/master/triple/Triple-Structure.jpg?raw=true)
 
 + <code>Serilizer</code> 序列化器，负责网络层传输的数据的序列化/反序列化
 + <code>Net</code> 网络层，负责将定义网络传输领对象和定义传输协议（socket、netty等）
