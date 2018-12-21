@@ -1,9 +1,12 @@
 package com.evanyz.triple.core.proxy.impl;
 
+import com.evanyz.triple.core.domain.IpAndPort;
 import com.evanyz.triple.core.net.Client;
 import com.evanyz.triple.core.net.ClientManager;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
+import com.evanyz.triple.core.register.RegisterCenter;
+import com.evanyz.triple.core.register.impl.zookeeper.ZookeeperRegisterCenter;
 import java.util.List;
 
 /**
@@ -12,10 +15,11 @@ import java.util.List;
 public class ProxyHandler {
 
     public static TripleResponse handler(TripleRequest tripleRequest) {
-        //TODO
-        List<String> provider = null;
+
+        RegisterCenter registerCenter = new ZookeeperRegisterCenter();
+        List<IpAndPort> discover = registerCenter.getService().discover(tripleRequest.getServiceName());
         Client client = ClientManager.getInstance();
-        return client.send(provider.iterator().next(), tripleRequest);
+        return client.send(discover.iterator().next(), tripleRequest);
     }
 }
 

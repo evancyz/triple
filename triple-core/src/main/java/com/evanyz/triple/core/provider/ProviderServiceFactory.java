@@ -41,10 +41,13 @@ public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
         classSets.forEach(clazz -> {
 
             if (clazz.isAnnotationPresent(TripleRpcService.class)) {
+
+                //TODO 简单先实现一下
+                String serviceName = ServiceUtils.genServiceName(clazz.getInterfaces()[0].getName());
                 //注册中心注册服务
-                master.getRegisterService().register(master.getIpAndPort(), clazz.getName());
+                master.getRegisterService().register(master.getIpAndPort(), serviceName);
                 //Factory注册服务实例
-                serviceFactory.put(ServiceUtils.genServiceName(clazz.getName()), ReflectionUtils.newInstance(clazz));
+                serviceFactory.put(serviceName, ReflectionUtils.newInstance(clazz));
             }
         });
     }

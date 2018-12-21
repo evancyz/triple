@@ -5,7 +5,7 @@ package com.evanyz.triple.core.common;
  */
 public class CommonConfig {
 
-    private static String zkServers = "127.0.0.1:1121";
+    private static String zkServers = "127.0.0.1:2181";
 
     public static String getZkServers() {
         return zkServers;

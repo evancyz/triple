@@ -1,5 +1,6 @@
 package com.evanyz.triple.core.net;
 
+import com.evanyz.triple.core.domain.IpAndPort;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
 
@@ -8,5 +9,5 @@ import com.evanyz.triple.core.net.domain.TripleResponse;
  */
 public interface Client {
 
-    TripleResponse send(String address, TripleRequest request);
+    TripleResponse send(IpAndPort ipAndPort, TripleRequest request);
 }

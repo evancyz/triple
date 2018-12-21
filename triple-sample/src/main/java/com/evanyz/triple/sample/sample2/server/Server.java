@@ -8,10 +8,6 @@ import com.evanyz.triple.core.provider.annotation.ProviderConfigurer;
 public class Server {
 
     public static void main(String[] args) {
-        ProviderConfigurer
-            .init()
-            .buildMaster()
-            .haveFun();
-
+        ProviderConfigurer.init().buildMaster().haveFun();
     }
 }

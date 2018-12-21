@@ -1,5 +1,6 @@
 package com.evanyz.triple.core.net.protocol.socket.client;
 
+import com.evanyz.triple.core.domain.IpAndPort;
 import com.evanyz.triple.core.net.ByteArrayReader;
 import com.evanyz.triple.core.net.Client;
 import com.evanyz.triple.core.net.domain.TripleRequest;
@@ -15,11 +16,9 @@ import java.net.Socket;
  */
 public class SocketClient implements Client {
 
-    @Override public TripleResponse send(String address, TripleRequest request) {
+    @Override public TripleResponse send(IpAndPort ipAndPort, TripleRequest request) {
 
-        String[] addressAndPort= address.split(":");
-
-        try (Socket socket = new Socket(addressAndPort[0], Integer.parseInt(addressAndPort[1]))) {
+        try (Socket socket = new Socket(ipAndPort.getIp(), ipAndPort.getPort())) {
 
             //get serializer
             Serializer serializer = SerializerManager.getSerializer();
@@ -37,7 +36,7 @@ public class SocketClient implements Client {
                 try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
                     byte[] response = ByteArrayReader.read(inputStream);
                     //deserialize
-                    return  serializer.deserialize(response, TripleResponse.class);
+                    return serializer.deserialize(response, TripleResponse.class);
                 }
             }
         } catch (Exception e) {
