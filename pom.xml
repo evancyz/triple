@@ -104,6 +104,18 @@
 
   </dependencies>
 
+  <distributionManagement>
+    <repository>
+      <id>code</id>
+      <name>code-releases</name>
+      <url>http://mvn.piaoniu.com/artifactory/libs-release-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>code</id>
+      <name>code-snapshots</name>
+      <url>http://mvn.piaoniu.com/artifactory/libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <build>
     <plugins>
