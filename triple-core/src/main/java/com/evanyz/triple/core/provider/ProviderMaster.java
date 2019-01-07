@@ -43,11 +43,13 @@ public class ProviderMaster implements Closeable {
 
         //register server handler
         server.setStartHandler(ListHandler.newHandler().register(new AbstractHandler() {
-            @Override public void process() {
+            @Override
+            public void process() {
             }
         }));
         server.setCloseHandler(ListHandler.newHandler().register(new AbstractHandler() {
-            @Override public void process() {
+            @Override
+            public void process() {
             }
         }));
     }
@@ -57,7 +59,8 @@ public class ProviderMaster implements Closeable {
         this.server.start();
     }
 
-    @Override public void close() {
+    @Override
+    public void close() {
         providerServiceFactory.close();
         server.close();
     }

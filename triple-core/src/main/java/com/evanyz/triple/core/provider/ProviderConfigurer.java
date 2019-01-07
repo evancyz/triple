@@ -23,6 +23,16 @@ public class ProviderConfigurer {
         return this;
     }
 
+    public ProviderConfigurer serviceScanPackage(String serviceScanPackage) {
+        this.serviceScanPackage = serviceScanPackage;
+        return this;
+    }
+
+    public ProviderConfigurer providerAddress(String ip, int port) {
+        this.providerAddress = new IpAndPort(ip, port);
+        return this;
+    }
+
     public ProviderMaster build() {
         return new ProviderMaster(this);
     }
