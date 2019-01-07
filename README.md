@@ -18,5 +18,5 @@
 + <code>Proxy</code> 提供一套代理方案给客户端使用，主要功能是服务发现，收发网络请求
 + <code>Server</code> 服务提供者，主要功能是，服务注册，监听服务，调用本地方法，返回调用结果
 
-###注：
+### 注：
 + <code>triple-sample</code> 项目里的 <code>sample2</code> 已经可以完整的模拟出服务器端和客户端的交互，如果要测试学习的话，请先在本机装一个<code>zookeeper</code>，暂时项目的注册中心是用zk实现的
