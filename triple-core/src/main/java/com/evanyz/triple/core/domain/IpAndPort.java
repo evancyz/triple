@@ -17,4 +17,8 @@ public class IpAndPort {
     public int getPort() {
         return port;
     }
+
+    public String toStr() {
+        return this.getIp() + ":" + this.getPort();
+    }
 }

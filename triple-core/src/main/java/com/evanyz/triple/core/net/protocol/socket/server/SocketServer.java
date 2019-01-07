@@ -1,13 +1,10 @@
 package com.evanyz.triple.core.net.protocol.socket.server;
 
 import com.evanyz.triple.core.net.AbstractServer;
-import com.evanyz.triple.core.net.ByteArrayReader;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
-import com.evanyz.triple.core.provider.ProviderMaster;
-import com.evanyz.triple.core.provider.ProviderServiceFactory;
+import com.evanyz.triple.core.net.reader.StreamReader;
 import com.evanyz.triple.core.serialization.Serializer;
-import com.evanyz.triple.core.serialization.SerializerManager;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,13 +25,12 @@ public class SocketServer extends AbstractServer {
 
     private ServerSocket serverSocket;
 
-    private ProviderMaster master;
 
     @Override public void start() {
 
         try {
             serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress(master.getIp(), master.getPort()));
+            serverSocket.bind(new InetSocketAddress(master.getProviderAddress().getIp(), master.getProviderAddress().getPort()));
 
             //开始扩展点
             getStartHandler().process();
@@ -47,20 +43,23 @@ public class SocketServer extends AbstractServer {
                 executorService.execute(() -> {
 
                     try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
+
+                        StreamReader reader = master.getStreamReader();
+
                         //receive data
-                        byte[] data = ByteArrayReader.read(inputStream);
+                        byte[] data = reader.getResponse(inputStream);
 
                         //get serializer
                         Serializer serializer = master.getSerializer();
 
                         //deserialize
-                        TripleRequest request = SerializerManager.getSerializer().deserialize(data, TripleRequest.class);
+                        TripleRequest request = serializer.deserialize(data, TripleRequest.class);
 
                         //invoke
-                        TripleResponse response = ProviderServiceFactory.getInstance().invoke(request);
+                        TripleResponse response = master.getProviderServiceFactory().invoke(request);
 
                         //serialize
-                        byte[] responseBytes = ByteArrayReader.wrapData(serializer.serialize(response));
+                        byte[] responseBytes = reader.wrap(serializer.serialize(response));
 
                         try (OutputStream outputStream = socket.getOutputStream()) {
                             outputStream.write(responseBytes);
@@ -88,7 +87,5 @@ public class SocketServer extends AbstractServer {
         }
     }
 
-    @Override public void setProviderMaster(ProviderMaster master) {
-        this.master = master;
-    }
+
 }

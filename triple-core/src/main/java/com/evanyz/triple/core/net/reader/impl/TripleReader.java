@@ -1,5 +1,6 @@
-package com.evanyz.triple.core.net;
+package com.evanyz.triple.core.net.reader.impl;
 
+import com.evanyz.triple.core.net.reader.StreamReader;
 import com.evanyz.triple.core.utils.ByteUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,9 +8,19 @@ import java.io.InputStream;
 /**
  * Created by evan on 2018/11/27.
  */
-public class ByteArrayReader {
+public class TripleReader implements StreamReader{
 
-    public static byte[] read(InputStream inputStream) {
+    @Override
+    public byte[] wrap(byte[] data) {
+        byte[] size = ByteUtils.int2byte(data.length);
+        byte[] newDate = new byte[data.length + size.length];
+        System.arraycopy(size, 0, newDate, 0, 3);
+        System.arraycopy(data, 0, newDate, 3, data.length);
+        return newDate;
+    }
+
+    @Override
+    public byte[] getResponse(InputStream inputStream) {
         try {
             byte[] size = new byte[3];
             inputStream.read(size);
@@ -21,13 +32,5 @@ public class ByteArrayReader {
         } catch (IOException e) {
             throw new RuntimeException("read error", e);
         }
-    }
-
-    public static byte[] wrapData(byte[] data) {
-        byte[] size = ByteUtils.int2byte(data.length);
-        byte[] newDate = new byte[data.length + size.length];
-        System.arraycopy(size, 0, newDate, 0, 3);
-        System.arraycopy(data, 0, newDate, 3, data.length);
-        return newDate;
     }
 }

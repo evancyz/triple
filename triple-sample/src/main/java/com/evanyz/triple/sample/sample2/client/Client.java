@@ -1,5 +1,8 @@
 package com.evanyz.triple.sample.sample2.client;
 
+import com.evanyz.triple.core.config.BaseConfigurer;
+import com.evanyz.triple.core.config.BaseMaster;
+import com.evanyz.triple.core.proxy.ProxyConfigurer;
 import com.evanyz.triple.core.proxy.ProxyManager;
 import com.evanyz.triple.sample.sample2.api.HelloService;
 
@@ -10,7 +13,13 @@ public class Client {
 
     public static void main(String[] args) {
 
-        HelloService service = ProxyManager.getProxyFactory().getProxy(HelloService.class);
-        System.out.println(service.hello());
+        BaseMaster baseMaster = BaseConfigurer.init().build();
+
+        ProxyConfigurer.init().baseMaster(baseMaster).build().start();
+
+        System.out.println(ProxyManager.getProxy(HelloService.class).hello());
+
+
+
     }
 }

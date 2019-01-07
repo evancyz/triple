@@ -1,15 +1,14 @@
 package com.evanyz.triple.core.proxy.impl.cblib;
 
 import com.evanyz.triple.core.net.domain.TripleRequest;
-import com.evanyz.triple.core.proxy.ProxyFactory;
-import com.evanyz.triple.core.proxy.impl.ProxyHandler;
+import com.evanyz.triple.core.proxy.AbstractProxyFactory;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
 /**
  * Created by evan on 2018/11/11.
  */
-public class CglibProxyFactory implements ProxyFactory {
+public class CglibProxyFactory extends AbstractProxyFactory {
 
     @Override public <T> T getProxy(Class<T> clazz) {
         try {
@@ -21,7 +20,7 @@ public class CglibProxyFactory implements ProxyFactory {
                 request.setServiceName(clazz.getName());
                 request.setMethodName(method.getName());
                 request.setParams(objects);
-                return ProxyHandler.handler(request).getData();
+                return (T)handler(request).getData();
             });
             return (T)enhancer.create();
         } catch (Exception e) {

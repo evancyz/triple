@@ -3,6 +3,7 @@ package com.evanyz.triple.core.provider;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
 import com.evanyz.triple.core.provider.annotation.TripleRpcService;
+import com.evanyz.triple.core.register.RegisterService;
 import com.evanyz.triple.core.utils.ClassUtils;
 import com.evanyz.triple.core.utils.ReflectionUtils;
 import com.evanyz.triple.core.utils.ServiceUtils;
@@ -18,12 +19,13 @@ import java.util.Set;
  */
 public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
 
-
     private static Map<String, Object> serviceFactory = Maps.newHashMap();
 
     private static ProviderServiceFactory factory = new ProviderServiceFactory();
 
     private ProviderMaster master;
+
+    private RegisterService registerService;
 
     public static ProviderServiceFactory getInstance() {
         return factory;
@@ -36,7 +38,7 @@ public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
     //registerService
     public void registerService() {
 
-        Set<Class<?>> classSets = ClassUtils.getClassSet(master.getBasePackage());
+        Set<Class<?>> classSets = ClassUtils.getClassSet(master.getServiceScanPackage());
 
         classSets.forEach(clazz -> {
 
@@ -45,7 +47,7 @@ public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
                 //TODO 简单先实现一下
                 String serviceName = ServiceUtils.genServiceName(clazz.getInterfaces()[0].getName());
                 //注册中心注册服务
-                master.getRegisterService().register(master.getIpAndPort(), serviceName);
+                registerService.register(master.getProviderAddress(), serviceName);
                 //Factory注册服务实例
                 serviceFactory.put(serviceName, ReflectionUtils.newInstance(clazz));
             }
@@ -56,8 +58,9 @@ public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
     public void close() {
         //removeService
         serviceFactory.keySet().forEach(serviceName ->
-            master.getRegisterService().unRegister(master.getIpAndPort(), serviceName)
+            registerService.unRegister(master.getProviderAddress(), serviceName)
         );
+
     }
 
     public TripleResponse invoke(TripleRequest tripleRequest) {
@@ -77,7 +80,8 @@ public class ProviderServiceFactory implements Closeable, ProviderMasterAware {
         return TripleResponse.fail("失败");
     }
 
-    @Override public void setProviderMaster(ProviderMaster master) {
+    @Override public void setMaster(ProviderMaster master) {
         this.master = master;
+        this.registerService = master.getRegisterService();
     }
 }

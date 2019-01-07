@@ -1,12 +1,12 @@
 package com.evanyz.triple.core.net.protocol.socket.client;
 
 import com.evanyz.triple.core.domain.IpAndPort;
-import com.evanyz.triple.core.net.ByteArrayReader;
 import com.evanyz.triple.core.net.Client;
 import com.evanyz.triple.core.net.domain.TripleRequest;
 import com.evanyz.triple.core.net.domain.TripleResponse;
+import com.evanyz.triple.core.net.reader.StreamReader;
+import com.evanyz.triple.core.proxy.ProxyMaster;
 import com.evanyz.triple.core.serialization.Serializer;
-import com.evanyz.triple.core.serialization.SerializerManager;
 import java.io.BufferedInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -14,17 +14,22 @@ import java.net.Socket;
 /**
  * Created by evan on 2018/11/12.
  */
-public class SocketClient implements Client {
+public class SocketClient implements Client{
+
+    private ProxyMaster master;
 
     @Override public TripleResponse send(IpAndPort ipAndPort, TripleRequest request) {
 
         try (Socket socket = new Socket(ipAndPort.getIp(), ipAndPort.getPort())) {
 
             //get serializer
-            Serializer serializer = SerializerManager.getSerializer();
+            Serializer serializer = master.getSerializer();
+
+            //get Reader
+            StreamReader reader =  master.getStreamReader();
 
             //serialize
-            byte[] data = ByteArrayReader.wrapData(serializer.serialize(request));
+            byte[] data = reader.wrap(serializer.serialize(request));
 
             //send data
             try (OutputStream outputStream = socket.getOutputStream()) {
@@ -34,7 +39,7 @@ public class SocketClient implements Client {
 
                 //receive data
                 try (BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream())) {
-                    byte[] response = ByteArrayReader.read(inputStream);
+                    byte[] response = reader.getResponse(inputStream);
                     //deserialize
                     return serializer.deserialize(response, TripleResponse.class);
                 }
@@ -42,5 +47,9 @@ public class SocketClient implements Client {
         } catch (Exception e) {
             throw new RuntimeException("client socket error", e);
         }
+    }
+
+    @Override public void setMaster(ProxyMaster master) {
+        this.master = master;
     }
 }

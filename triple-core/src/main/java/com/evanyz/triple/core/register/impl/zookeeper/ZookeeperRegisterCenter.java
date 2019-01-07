@@ -1,8 +1,10 @@
 package com.evanyz.triple.core.register.impl.zookeeper;
 
-import com.evanyz.triple.core.common.CommonConfig;
+import com.evanyz.triple.core.config.BaseConfigurer;
+import com.evanyz.triple.core.domain.IpAndPort;
 import com.evanyz.triple.core.register.AbstractRegisterCenter;
 import com.evanyz.triple.core.register.RegisterService;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -20,7 +22,12 @@ public class ZookeeperRegisterCenter extends AbstractRegisterCenter {
 
     private CuratorFramework createClient() {
         try {
-            CuratorFramework client = CuratorFrameworkFactory.newClient(CommonConfig.getZkServers(), new RetryNTimes(10, 3000));
+
+            String zkServers = BaseConfigurer.getRegisterAddresses().stream().map(IpAndPort::toStr)
+                .collect(Collectors.joining(","));
+
+            CuratorFramework client = CuratorFrameworkFactory.newClient(zkServers, new RetryNTimes(10, 3000));
+
             client.start();
             return client;
         } catch (Exception e) {

@@ -1,16 +1,18 @@
 package com.evanyz.triple.core.net;
 
 import com.evanyz.triple.core.net.handler.ListHandler;
-import com.evanyz.triple.core.provider.ProviderMasterAware;
+import com.evanyz.triple.core.provider.ProviderMaster;
 
 /**
  * Created by evan on 2018/12/9.
  */
-public abstract class AbstractServer implements Server,ProviderMasterAware {
+public abstract class AbstractServer implements Server {
 
     ListHandler startHandler;
 
     ListHandler closeHandler;
+
+    protected ProviderMaster master;
 
     public void setStartHandler(ListHandler startHandler) {
         this.startHandler = startHandler;
@@ -26,5 +28,9 @@ public abstract class AbstractServer implements Server,ProviderMasterAware {
 
     public ListHandler getCloseHandler() {
         return closeHandler;
+    }
+
+    @Override public void setMaster(ProviderMaster master) {
+        this.master = master;
     }
 }

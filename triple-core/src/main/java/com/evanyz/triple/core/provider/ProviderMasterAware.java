@@ -1,9 +1,11 @@
 package com.evanyz.triple.core.provider;
 
 /**
- * Created by evan on 2018/12/18.
+ * Created by evan on 2019/1/6.
  */
 public interface ProviderMasterAware {
 
-    void setProviderMaster(ProviderMaster master);
+    void setMaster(ProviderMaster master);
+
+
 }
