@@ -26,7 +26,13 @@ public class BaseConfigurer {
     private static RegisterServiceType registerServiceType = RegisterServiceType.ZOOKEEPER;
 
     //注册中心地址
-    private static List<IpAndPort> registerAddresses = Lists.newArrayList(new IpAndPort("127.0.0.1", 2181));
+    private static List<IpAndPort> registerAddresses = Lists.newArrayList();
+
+    BaseConfigurer registerAddress(IpAndPort ipAndPort) {
+        registerAddresses.add(ipAndPort);
+        return this;
+    }
+
 
     public static List<IpAndPort> getRegisterAddresses() {
         return registerAddresses;
