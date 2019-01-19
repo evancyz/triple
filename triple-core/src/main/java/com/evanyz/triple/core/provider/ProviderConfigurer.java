@@ -2,6 +2,8 @@ package com.evanyz.triple.core.provider;
 
 import com.evanyz.triple.core.config.BaseMaster;
 import com.evanyz.triple.core.domain.IpAndPort;
+import com.evanyz.triple.core.provider.serviceDiscoverer.DefaultProviderServiceDiscoverer;
+import com.evanyz.triple.core.provider.serviceDiscoverer.ProviderServiceDiscoverer;
 
 /**
  * Created by evan on 2019/1/6.
@@ -13,6 +15,8 @@ public class ProviderConfigurer {
     public IpAndPort providerAddress = new IpAndPort("127.0.0.1", 9999);
 
     private BaseMaster baseMaster;
+
+    private ProviderServiceDiscoverer serviceDiscoverer;
 
     public static ProviderConfigurer init() {
         return new ProviderConfigurer();
@@ -33,7 +37,15 @@ public class ProviderConfigurer {
         return this;
     }
 
+    public ProviderConfigurer serviceDiscoverer(ProviderServiceDiscoverer discoverer) {
+        this.serviceDiscoverer = discoverer;
+        return this;
+    }
+
     public ProviderMaster build() {
+        if (serviceDiscoverer == null) {
+            serviceDiscoverer = new DefaultProviderServiceDiscoverer();
+        }
         return new ProviderMaster(this);
     }
 

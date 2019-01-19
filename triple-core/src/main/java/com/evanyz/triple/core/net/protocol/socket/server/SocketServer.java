@@ -57,7 +57,7 @@ public class SocketServer extends AbstractServer {
                         TripleRequest request = serializer.deserialize(data, TripleRequest.class);
 
                         //invoke
-                        TripleResponse response = master.getProviderServiceFactory().invoke(request);
+                        TripleResponse response = master.getServiceFactory().invoke(request);
 
                         //serialize
                         byte[] responseBytes = reader.wrap(serializer.serialize(response));

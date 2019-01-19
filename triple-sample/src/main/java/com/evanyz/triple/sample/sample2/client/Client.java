@@ -19,7 +19,5 @@ public class Client {
 
         System.out.println(ProxyManager.getProxy(HelloService.class).hello());
 
-
-
     }
 }

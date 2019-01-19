@@ -24,7 +24,7 @@ public class BaseMaster {
         //TODO use baseConfigurer to init
         serializer = new FastJSONSerializer();
         streamReader = new TripleReader();
-        registerService = new ZookeeperRegisterCenter().createService();
+        registerService = new ZookeeperRegisterCenter().getService();
     }
 
     public Serializer getSerializer() {

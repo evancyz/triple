@@ -23,19 +23,17 @@ public class ProviderMaster implements Closeable {
 
     private AbstractServer server;
 
-    private ProviderServiceFactory providerServiceFactory;
+    private ProviderServiceFactory serviceFactory;
 
     public ProviderMaster(ProviderConfigurer configurer) {
 
         this.configurer = configurer;
 
-        //use ProviderConfigurer to init
-
-        providerServiceFactory = ProviderServiceFactory.getInstance();
-        providerServiceFactory.setMaster(this);
-
+        //init service factory
+        serviceFactory = new ProviderServiceFactory();
+        serviceFactory.setMaster(this);
         //register service
-        providerServiceFactory.registerService();
+        serviceFactory.registerService();
 
         //init server
         server = new SocketServer();
@@ -61,7 +59,7 @@ public class ProviderMaster implements Closeable {
 
     @Override
     public void close() {
-        providerServiceFactory.close();
+        serviceFactory.close();
         server.close();
     }
 
@@ -85,8 +83,8 @@ public class ProviderMaster implements Closeable {
         return this.configurer.getProviderAddress();
     }
 
-    public ProviderServiceFactory getProviderServiceFactory() {
-        return providerServiceFactory;
+    public ProviderServiceFactory getServiceFactory() {
+        return serviceFactory;
     }
 
 }
