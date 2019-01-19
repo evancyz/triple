@@ -28,7 +28,7 @@ public class BaseConfigurer {
     //注册中心地址
     private static List<IpAndPort> registerAddresses = Lists.newArrayList();
 
-    BaseConfigurer registerAddress(IpAndPort ipAndPort) {
+    public BaseConfigurer registerAddress(IpAndPort ipAndPort) {
         registerAddresses.add(ipAndPort);
         return this;
     }
