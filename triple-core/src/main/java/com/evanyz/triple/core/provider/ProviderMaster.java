@@ -55,7 +55,8 @@ public class ProviderMaster implements Closeable {
 
     public void start() {
         log.info(">>>>> Triple RPC Server start success");
-        this.server.start();
+        Thread serverThread = new Thread(() -> this.server.start());
+        serverThread.start();
     }
 
     @Override
