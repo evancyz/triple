@@ -10,9 +10,9 @@ import com.evanyz.triple.core.provider.serviceDiscoverer.ProviderServiceDiscover
  */
 public class ProviderConfigurer {
 
-    public String serviceScanPackage = "com.evanyz.triple.sample.sample2.server";
+    private String serviceScanPackage = "com.evanyz.triple.sample.sample2.server";
 
-    public IpAndPort providerAddress = new IpAndPort("127.0.0.1", 9999);
+    private IpAndPort providerAddress = new IpAndPort("127.0.0.1", 9999);
 
     private BaseMaster baseMaster;
 
@@ -47,6 +47,10 @@ public class ProviderConfigurer {
             serviceDiscoverer = new DefaultProviderServiceDiscoverer();
         }
         return new ProviderMaster(this);
+    }
+
+    public ProviderServiceDiscoverer getServiceDiscoverer() {
+        return serviceDiscoverer;
     }
 
     public BaseMaster getBaseMaster() {

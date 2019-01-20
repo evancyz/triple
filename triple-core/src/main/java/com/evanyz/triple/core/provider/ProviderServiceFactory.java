@@ -80,5 +80,7 @@ public class ProviderServiceFactory implements ProviderMasterAware, Closeable {
         this.registerService = master.getRegisterService();
     }
 
-
+    public void setDiscovery(ProviderServiceDiscoverer discovery) {
+        this.discovery = discovery;
+    }
 }

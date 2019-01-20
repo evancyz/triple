@@ -31,6 +31,7 @@ public class ProviderMaster implements Closeable {
 
         //init service factory
         serviceFactory = new ProviderServiceFactory();
+        serviceFactory.setDiscovery(configurer.getServiceDiscoverer());
         serviceFactory.setMaster(this);
         //register service
         serviceFactory.registerService();
